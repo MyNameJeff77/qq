@@ -1,0 +1,28 @@
+from flask import Flask
+import RPi.GPIO as GPIO
+app = Flask(__name__)
+GPIO.setmode(GPIO.BCM)
+LED1 = 17
+LED2 = 27
+GPIO.setup(LED1, GPIO.OUT)
+GPIO.setup(LED2, GPIO.OUT)
+@app.route('/<led>/<state>')
+def control_led(led, state):
+   if led == "led1":
+       pin = LED1
+       led_num = "LED 1"
+   elif led == "led2":
+       pin = LED2
+       led_num = "LED 2"
+   else:
+       return "<h3>Invalid LED</h3>"
+   if state == "on":
+       GPIO.output(pin, GPIO.HIGH)
+       return f"<h3>{led_num} => ON</h3>"
+   elif state == "off":
+       GPIO.output(pin, GPIO.LOW)
+       return f"<h3>{led_num} => OFF</h3>"
+   else:
+       return "<h3>Invalid State</h3>"
+if __name__ == '__main__':
+   app.run(debug=True, host='0.0.0.0')
